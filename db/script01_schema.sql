@@ -1,0 +1,98 @@
+CREATE DATABASE IF NOT EXISTS top_shop 
+    CHARACTER SET utf8mb4 
+    COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS top_shop.address(
+	id INT AUTO_INCREMENT NOT NULL,
+	street_name VARCHAR(100) NOT NULL,
+    exterior_number VARCHAR(10) NOT NULL,
+    interior_number VARCHAR(10),
+    postal_code CHAR(5) NOT NULL,
+    `references` VARCHAR(255),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS top_shop.users(
+	id INT AUTO_INCREMENT NOT NULL,
+	first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(63) NOT NULL UNIQUE,
+    `password` VARCHAR(100) NOT NULL,
+    fk_address INT NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    `role` ENUM('ADMIN', 'CUSTOMER') DEFAULT 'CUSTOMER',
+    PRIMARY KEY(id),
+    FOREIGN KEY(fk_address) REFERENCES top_shop.address(id)    
+);
+
+CREATE TABLE IF NOT EXISTS top_shop.tshirts(
+	id INT AUTO_INCREMENT NOT NULL,
+    `name` VARCHAR(31),
+    `type` ENUM('hombre', 'mujer', 'niño', 'niña') NOT NULL,
+	cuello ENUM('redondo', 'v', 'polo') NOT NULL,
+    manga ENUM('corta', 'larga', 'sin_mangas') NOT NULL,
+    talla ENUM('XS', 'S', 'M', 'L', 'XL', 'XXL') NOT NULL,
+    color ENUM('blanco', 'negro', 'rojo', 'azul', 'verde') NOT NULL,
+    price DECIMAL(6, 2),
+    `description` VARCHAR(127),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS top_shop.shopping_cart(
+	id INT AUTO_INCREMENT NOT NULL,
+    fk_user INT NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(fk_user) REFERENCES top_shop.users(id)
+);
+
+CREATE TABLE IF NOT EXISTS top_shop.shopping_cart_items(
+    fk_cart INT NOT NULL,
+    fk_tshirt INT NOT NULL,
+    amount INT NOT NULL CHECK (amount > 0),
+	PRIMARY KEY(fk_cart, fk_tshirt),
+    FOREIGN KEY(fk_cart) REFERENCES top_shop.shopping_cart(id),
+    FOREIGN KEY(fk_tshirt) REFERENCES top_shop.tshirts(id)
+);
+
+CREATE TABLE IF NOT EXISTS top_shop.tickets(
+	id INT AUTO_INCREMENT NOT NULL,
+    fk_user INT NOT NULL,
+    `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    total DECIMAL(10, 2) NOT NULL,
+    `status` ENUM('nuevo', 'pagado', 'enviado', 'completado', 'cancelado') DEFAULT 'nuevo',
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS top_shop.ticket_items(
+	id INT AUTO_INCREMENT NOT NULL,
+	fk_ticket INT NOT NULL,
+    fk_tshirt INT,
+    `name` VARCHAR(31) NOT NULL,
+    amount INT NOT NULL CHECK (amount > 0),
+    price DECIMAL(6, 2) NOT NULL,
+    subtotal DECIMAL(10,2) GENERATED ALWAYS AS (amount * price) STORED,
+    PRIMARY KEY(id),
+    FOREIGN KEY(fk_ticket) REFERENCES top_shop.tickets(id)
+);
+
+CREATE TABLE IF NOT EXISTS top_shop.payments(
+    id INT AUTO_INCREMENT NOT NULL,
+    fk_ticket INT NOT NULL,
+    payment_method ENUM('tarjeta', 'paypal', 'oxxo', 'transferencia') NOT NULL,
+    payment_status ENUM('pendiente', 'pagado', 'fallido') NOT NULL DEFAULT 'pendiente',
+    paid_at DATETIME,
+    PRIMARY KEY(id),
+    FOREIGN KEY(fk_ticket) REFERENCES top_shop.tickets(id)
+);
+
+CREATE TABLE IF NOT EXISTS top_shop.shipments (
+    id INT AUTO_INCREMENT NOT NULL,
+    fk_ticket INT NOT NULL,
+    shipment_status ENUM('pendiente', 'enviado', 'entregado', 'cancelado') NOT NULL DEFAULT 'pendiente',
+    tracking_number VARCHAR(64),
+    shipped_at DATETIME,
+    delivered_at DATETIME,
+    PRIMARY KEY(id),
+    FOREIGN KEY(fk_ticket) REFERENCES top_shop.tickets(id)
+);
+
