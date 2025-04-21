@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Alert,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm: React.FC = () => {
@@ -9,6 +16,8 @@ const LoginForm: React.FC = () => {
     username: "",
     password: "",
   });
+
+  const [error, setError] = useState<string | null>(null); // Estado para errores
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -20,6 +29,7 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null); // Limpiar errores anteriores
 
     try {
       const response = await fetch("http://localhost:8080/auth/login", {
@@ -33,12 +43,14 @@ const LoginForm: React.FC = () => {
         console.log("Token recibido:", data.token);
         localStorage.setItem("token", data.token);
 
-        navigate("/dashboard"); // redirige al dashboard
+        navigate("/dashboard");
       } else {
-        console.error("Credenciales incorrectas");
+        const message = await response.text();
+        setError(message || "Error al iniciar sesión");
       }
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
+    } catch (err) {
+      setError("No se pudo conectar al servidor");
+      console.error("Error al iniciar sesión:", err);
     }
   };
 
@@ -48,6 +60,12 @@ const LoginForm: React.FC = () => {
         <Typography variant="h4" gutterBottom>
           Iniciar Sesión
         </Typography>
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
 
         <TextField
           label="Usuario"

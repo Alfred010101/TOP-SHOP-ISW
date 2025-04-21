@@ -1,5 +1,6 @@
 package com.back_top_shop.auth;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,9 +18,13 @@ public class AuthController
     private final AuthService authService;
 
     @PostMapping(value = "/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request)
+    public ResponseEntity<?> login(@RequestBody LoginRequest request)
     {
-        return ResponseEntity.ok(authService.login(request));
+        if (request.getUsername().trim().isEmpty() || request.getPassword().trim().isEmpty() ) 
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Faltan credenciales");
+        }
+        return authService.login(request);
     }
     
     @PostMapping(value = "/register")

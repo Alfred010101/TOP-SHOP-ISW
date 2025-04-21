@@ -1,7 +1,10 @@
 package com.back_top_shop.auth;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,14 +29,27 @@ public class AuthService
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse login(LoginRequest request) 
+    public ResponseEntity<?> login(LoginRequest request) 
     {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        UserDetails person = userRepository.findByUsername(request.getUsername()).orElseThrow();
-   
+    //    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            );
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
+        }
+
+        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+
+        return ResponseEntity.ok(AuthResponse.builder()
+            .token(jwtService.getToken(user))
+            .build()
+        );
+        /*return ResponseEntity.status(HttpStatus.OK).body(jwtService.getToken(user));
         return AuthResponse.builder()
-            .token(jwtService.getToken(person))
-            .build();
+            .token(jwtService.getToken(user))
+            .build();*/
     }
 
     public AuthResponse register(RegisterRequest request) 
