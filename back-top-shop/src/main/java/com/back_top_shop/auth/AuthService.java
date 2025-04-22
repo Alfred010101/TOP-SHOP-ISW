@@ -1,5 +1,7 @@
 package com.back_top_shop.auth;
 
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -58,22 +60,24 @@ public class AuthService
             throw new RuntimeException("El usuario ya existe");
         }
 
-        Address address = Address.builder()
+        /*Address address = Address.builder()
             .streetName(request.getAddress().getStreetName())
             .exteriorNumber(request.getAddress().getExteriorNumber())
             .interiorNumber(request.getAddress().getInteriorNumber())
             .postalCode(request.getAddress().getPostalCode())
             .references(request.getAddress().getReferences())
             .build();
-        
-        Address addressSave = addressRepository.save(address);
+        */
+        //Address addressSave = addressRepository.save(address);
+        Optional<Address> address = addressRepository.findById(10);
 
+        System.out.println(address);
         User user = User.builder()
             .username(request.getUsername())
             .password(passwordEncoder.encode(request.getPassword()))
             .firstName(request.getFirstName())
             .lastName(request.getLastName())
-            .addressId(addressSave.getId())
+            .addressId(address.get().getId())
             .phone(request.getPhone())
             .role(Role.CUSTOMER)
             .build();
