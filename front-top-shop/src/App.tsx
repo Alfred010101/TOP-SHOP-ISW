@@ -1,44 +1,56 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import RegisterForm from "./components/RegisterForm";
-import LoginForm from "./components/LoginForm";
-import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
-import PublicRoute from "./components/PublicRoute";
+/*import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import AuthPage from "./components/AuthPage";
 
 function App() {
   return (
-    <Routes>
-      {/* Rutas públicas (solo para no autenticados) */}
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <LoginForm />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <PublicRoute>
-            <RegisterForm />
-          </PublicRoute>
-        }
-      />
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<AuthPage mode="sign-in" />} />
+        <Route path="/register" element={<AuthPage mode="sign-up" />} />
+      </Routes>
+    </Router>
+  );
+}
 
-      {/* Rutas protegidas (solo para autenticados) */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
+export default App;*/
 
-      {/* Ruta por defecto */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
+import AuthPage from "./components/AuthPage";
+import Dashboard from "./components/Dashboard";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<AuthPage mode="sign-in" />} />
+          <Route path="/register" element={<AuthPage mode="sign-up" />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
