@@ -9,14 +9,18 @@ import {
   Button,
   Tooltip,
 } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 //import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -26,6 +30,22 @@ const Navbar = () => {
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
+  };
+
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+    handleCloseUserMenu();
   };
 
   return (
@@ -92,17 +112,40 @@ const Navbar = () => {
 
         {/* Íconos laterales */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Tooltip title="Mi cuenta">
-            <IconButton color="inherit" component={RouterLink} to="/cuenta">
-              <AccountCircleIcon />
-            </IconButton>
-          </Tooltip>
           <Tooltip title="Carrito">
             <IconButton color="inherit" component={RouterLink} to="/carrito">
               <ShoppingCartIcon />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Mi cuenta">
+            <IconButton color="inherit" onClick={handleOpenUserMenu}>
+              <AccountCircleIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
+
+        {/* Menú desplegable de cuenta */}
+        <Menu
+          anchorEl={anchorElUser}
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+        >
+          <MenuItem
+            component={RouterLink}
+            to="/account"
+            onClick={handleCloseUserMenu}
+          >
+            Mi perfil
+          </MenuItem>
+          <MenuItem
+            component={RouterLink}
+            to="/historial-compras"
+            onClick={handleCloseUserMenu}
+          >
+            Historial de compras
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );

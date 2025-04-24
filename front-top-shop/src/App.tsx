@@ -42,27 +42,28 @@ import FAQ from "./pages/FAQ";
 import ProtectedLayout from "./components/ProtectedLayout";
 import Home from "./pages/Home";
 import CustomDesign from "./pages/CustomDesign";
+import PerfilPage from "./pages/PerfilPage";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<AuthPage mode="sign-in" />} />
           <Route path="/register" element={<AuthPage mode="sign-up" />} />
 
           <Route element={<ProtectedLayout />}>
+            <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<Home />} />
             <Route path="/design" element={<CustomDesign />} />
             <Route path="/catalogo" element={<Catalog />} />
             <Route path="/sobre-nosotros" element={<About />} />
             <Route path="/como-funciona" element={<HowItWorks />} />
             <Route path="/opiniones" element={<Testimonials />} />
-            <Route path="/cuenta" element={<Account />} />
             <Route path="/carrito" element={<Cart />} />
             <Route path="/contacto" element={<Contact />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/account/*" element={<PerfilPage />} />
           </Route>
         </Routes>
       </Router>

@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   Paper,
-  InputLabel,
   IconButton,
 } from "@mui/material";
 import { useState } from "react";
