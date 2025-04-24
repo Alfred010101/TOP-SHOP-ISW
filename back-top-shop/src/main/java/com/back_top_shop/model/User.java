@@ -53,7 +53,7 @@ public class User implements UserDetails
     @Column(name = "`password`", nullable = false, length = 100)
     private String password;
 
-    @Column(name = "fk_address", nullable = false)
+    @Column(name = "fk_address", nullable = true)
     private Integer addressId;
 
     @Column(name = "phone", nullable = false, length = 20)

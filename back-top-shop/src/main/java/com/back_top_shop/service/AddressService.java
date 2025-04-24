@@ -22,9 +22,15 @@ public class AddressService
         return addressRepository.findById(id);
     }
 
-    public ResponseEntity<?> update(Integer id, AddressDTO body)
+    public ResponseEntity<Address> save(Address addres)
     {
-        Address address = addressRepository.findById(id).get();
+        System.out.println("AAAAAAAqqqqqqqqqqqquuuuuuiii 33333");
+        return ResponseEntity.ok(addressRepository.save(addres));
+    }
+
+    public ResponseEntity<?> update(Address address, AddressDTO body)
+    {
+        //Address address = addressRepository.findById(id).get();
 
         address.setStreetName(body.streetName());
         address.setExteriorNumber(body.exteriorNumber());

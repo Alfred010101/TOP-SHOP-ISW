@@ -28,9 +28,9 @@ public class UserService
         return userRepository.findByEmail(email);
     }
 
-    public ResponseEntity<?> update(String email, UserUpdateRequestDTO body)
+    public ResponseEntity<?> update(User user, UserUpdateRequestDTO body)
     {
-        User user = userRepository.findByEmail(email).get();
+        //User user = userRepository.findByEmail(email).get();
         user.setFirstName(body.firstName());
         user.setLastName(body.lastName());
         user.setPhone(body.phone());

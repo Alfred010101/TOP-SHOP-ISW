@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS top_shop.users(
     last_name VARCHAR(100) NOT NULL,
     email VARCHAR(63) NOT NULL UNIQUE,
     `password` VARCHAR(100) NOT NULL,
-    fk_address INT NOT NULL,
+    fk_address INT,
     phone VARCHAR(20) NOT NULL,
     `role` ENUM('ADMIN', 'CUSTOMER') DEFAULT 'CUSTOMER',
     PRIMARY KEY(id),

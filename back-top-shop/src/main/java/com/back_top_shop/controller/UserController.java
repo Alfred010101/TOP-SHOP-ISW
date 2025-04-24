@@ -34,7 +34,7 @@ public class UserController {
     private final AddressService addressService;
 
     @PostMapping()
-    public void postMethodName(@RequestBody User user) 
+    public void createUser(@RequestBody User user) 
     {
         userService.createUser(user);
     }
@@ -54,25 +54,45 @@ public class UserController {
         if (user.isEmpty()) 
             return ResponseEntity.notFound().build();
 
-        Optional<Address> address = addressService.findById(user.get().getAddressId());
+        UserDTO dto;
 
-        if (address.isEmpty()) 
-            return ResponseEntity.notFound().build();
+        if (user.get().getAddressId() != null) 
+        {
+            Optional<Address> address = addressService.findById(user.get().getAddressId());
 
-        UserDTO dto = new UserDTO(
-            user.get().getFirstName(),
-            user.get().getLastName(),
-            user.get().getUsername(),
-            user.get().getPhone(),
-            new AddressDTO(
-                address.get().getStreetName(), 
-                address.get().getExteriorNumber(), 
-                address.get().getInteriorNumber(), 
-                address.get().getPostalCode(), 
-                address.get().getReferences())
-        );
+            if (address.isEmpty()) 
+                return ResponseEntity.notFound().build();
+
+            dto = new UserDTO(
+                user.get().getFirstName(),
+                user.get().getLastName(),
+                user.get().getUsername(),
+                user.get().getPhone(),
+                new AddressDTO(
+                    address.get().getStreetName(), 
+                    address.get().getExteriorNumber(), 
+                    address.get().getInteriorNumber(), 
+                    address.get().getPostalCode(), 
+                    address.get().getReferences())
+            );
+        }else{
+            dto = new UserDTO(
+                user.get().getFirstName(),
+                user.get().getLastName(),
+                user.get().getUsername(),
+                user.get().getPhone(),
+                new AddressDTO(
+                    "", 
+                    "",
+                    "", 
+                    "", 
+                    ""
+                )
+            );
+        }
 
         return ResponseEntity.ok(dto);
+        
     }
 
     @PutMapping
@@ -80,17 +100,22 @@ public class UserController {
         String email = authentication.getName(); 
 
         Optional<User> userOptional = userService.findByEmail(email);
-        if (userOptional.isEmpty()) 
-            return ResponseEntity.notFound().build();
         
+        if (request.hasNull() ||  userOptional.isEmpty()) 
+            return ResponseEntity.notFound().build();
+
         User user = userOptional.get();
 
-        Optional<Address> address = addressService.findById(user.getAddressId());
-        if (address.isEmpty()) 
-            return ResponseEntity.notFound().build();
-
-        addressService.update(user.getAddressId(), request.address());
-        return userService.update(email, request);
+        if (user.getAddressId() == null) 
+        {
+            ResponseEntity<Address> response = addressService.save(request.getObjAddress());
+            if(response.getBody() != null)
+                user.setAddressId(response.getBody().getId());
+        }
+        else
+            addressService.update(addressService.findById(user.getAddressId()).get(), request.address());
+        
+        return userService.update(user, request);
     }
 
 }
