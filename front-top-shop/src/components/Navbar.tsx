@@ -66,6 +66,9 @@ const Navbar = () => {
           <Button color="inherit" component={RouterLink} to="/home">
             Inicio
           </Button>
+          <Button color="inherit" component={RouterLink} to="/catalogo">
+            Catálogo
+          </Button>
           <Button
             color="inherit"
             component={RouterLink}
@@ -74,15 +77,11 @@ const Navbar = () => {
           >
             Diseña
           </Button>
-
-          <Button color="inherit" component={RouterLink} to="/catalogo">
-            Catálogo
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/sobre-nosotros">
-            Nosotros
-          </Button>
           <Button color="inherit" component={RouterLink} to="/como-funciona">
             Guía
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/about">
+            Nosotros
           </Button>
           <Button color="inherit" onClick={handleOpenMenu}>
             Más <MoreVertIcon fontSize="small" />
@@ -100,13 +99,6 @@ const Navbar = () => {
           </MenuItem>
           <MenuItem component={RouterLink} to="/faq" onClick={handleCloseMenu}>
             FAQ
-          </MenuItem>
-          <MenuItem
-            component={RouterLink}
-            to="/contacto"
-            onClick={handleCloseMenu}
-          >
-            Contacto
           </MenuItem>
         </Menu>
 

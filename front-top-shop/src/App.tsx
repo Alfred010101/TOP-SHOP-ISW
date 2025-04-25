@@ -35,9 +35,7 @@ import Catalog from "./pages/Catalog";
 import About from "./pages/About";
 import HowItWorks from "./pages/HowItWorks";
 import Testimonials from "./pages/Testimonials";
-import Account from "./pages/Account";
 import Cart from "./pages/Cart";
-import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import ProtectedLayout from "./components/ProtectedLayout";
 import Home from "./pages/Home";
@@ -57,11 +55,10 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/design" element={<CustomDesign />} />
             <Route path="/catalogo" element={<Catalog />} />
-            <Route path="/sobre-nosotros" element={<About />} />
+            <Route path="/about" element={<About />} />
             <Route path="/como-funciona" element={<HowItWorks />} />
             <Route path="/opiniones" element={<Testimonials />} />
             <Route path="/carrito" element={<Cart />} />
-            <Route path="/contacto" element={<Contact />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/account/*" element={<PerfilPage />} />
           </Route>
