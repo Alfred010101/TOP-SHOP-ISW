@@ -66,7 +66,12 @@ const Navbar = () => {
           <Button color="inherit" component={RouterLink} to="/home">
             Inicio
           </Button>
-          <Button color="inherit" component={RouterLink} to="/catalogo">
+          <Button
+            color="inherit"
+            component={RouterLink}
+            to="/catalogo"
+            sx={{ "&:hover": { color: "secondary.main" } }}
+          >
             Catálogo
           </Button>
           <Button
