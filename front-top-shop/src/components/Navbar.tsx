@@ -10,12 +10,12 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-//import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import logo from "../assets/logo Top-shop.jpg"; // Importación correcta del logo
 
 const Navbar = () => {
   const { logout } = useAuth();
@@ -49,47 +49,108 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="fixed" color="primary" sx={{ zIndex: 1300 }}>
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        {/* Logo / Nombre */}
+    <AppBar 
+      position="fixed" 
+      sx={{ 
+        zIndex: 1300,
+        boxShadow: "none",
+        borderBottom: "1px solid #e0e0e0",
+        backgroundColor: "white", // Color de fondo explícito
+        color: "black", // Color de texto principal
+      }}
+    >
+      <Toolbar sx={{ 
+        justifyContent: "space-between",
+        gap: 2,
+        padding: "8px 16px !important"
+      }}>
+        {/* Logo */}
         <Typography
           variant="h6"
           component={RouterLink}
           to="/home"
-          sx={{ textDecoration: "none", color: "inherit", fontWeight: "bold" }}
+          sx={{ 
+            textDecoration: "none", 
+            color: "inherit", 
+            fontWeight: "bold", 
+            flexShrink: 0,
+            '& img': { 
+              maxWidth: { xs: "70px", md: "70px" }, // Tamaño responsive corregido
+              height: "auto",
+              objectFit: "contain"
+            }
+          }}
         >
-          TOP-SHOP
+          <img
+            src={logo} // Usa la importación
+            alt="Top-shop logo"
+          />
         </Typography>
 
         {/* Menú principal */}
-        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-          <Button color="inherit" component={RouterLink} to="/home">
+        <Box sx={{ 
+          display: { xs: "none", md: "flex" },
+          gap: 2,
+          alignItems: "center"
+        }}>
+          <Button 
+            component={RouterLink}
+            to="/home"
+            sx={{ 
+              color: "black",
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+            }}
+          >
             Inicio
           </Button>
           <Button
-            color="inherit"
             component={RouterLink}
             to="/catalogo"
-            sx={{ "&:hover": { color: "secondary.main" } }}
+            sx={{ 
+              color: "black",
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+            }}
           >
             Catálogo
           </Button>
           <Button
-            color="inherit"
             component={RouterLink}
             to="/design"
-            sx={{ "&:hover": { color: "secondary.main" } }}
+            sx={{ 
+              color: "black",
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+            }}
           >
-            Diseña
+            Diseños
           </Button>
-          <Button color="inherit" component={RouterLink} to="/como-funciona">
+          <Button 
+            component={RouterLink}
+            to="/como-funciona"
+            sx={{ 
+              color: "black",
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+            }}
+          >
             Guía
           </Button>
-          <Button color="inherit" component={RouterLink} to="/about">
-            Nosotros
+          <Button 
+            component={RouterLink}
+            to="/about"
+            sx={{ 
+              color: "black",
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+            }}
+          >
+           Sobre Nosotros
           </Button>
-          <Button color="inherit" onClick={handleOpenMenu}>
-            Más <MoreVertIcon fontSize="small" />
+          <Button 
+            onClick={handleOpenMenu}
+            sx={{ 
+              color: "black",
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+            }}
+          >
+            Más <MoreVertIcon fontSize="small" sx={{ color: "black" }} />
           </Button>
         </Box>
 
@@ -110,12 +171,19 @@ const Navbar = () => {
         {/* Íconos laterales */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Tooltip title="Carrito">
-            <IconButton color="inherit" component={RouterLink} to="/carrito">
+            <IconButton 
+              component={RouterLink} 
+              to="/carrito"
+              sx={{ color: "black" }}
+            >
               <ShoppingCartIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Mi cuenta">
-            <IconButton color="inherit" onClick={handleOpenUserMenu}>
+            <IconButton 
+              onClick={handleOpenUserMenu}
+              sx={{ color: "black" }}
+            >
               <AccountCircleIcon />
             </IconButton>
           </Tooltip>
