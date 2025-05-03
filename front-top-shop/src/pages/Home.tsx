@@ -189,7 +189,7 @@ const Home = () => {
               border: 'none',
               cursor: 'pointer',
               backgroundColor: activeIndex === index ? '#3498db' : '#bdc3c7',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.1s ease'
             }}
           />
         ))}
