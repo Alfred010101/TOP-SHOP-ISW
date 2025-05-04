@@ -21,6 +21,7 @@ interface Product {
   description: string;
   price: string;
   category: string;
+  stock: number;
 }
 
 const Catalog = () => {
@@ -35,21 +36,24 @@ const Catalog = () => {
       title: 'Playera Frase Inspiradora',
       description: 'Algodón 100%, cómoda para el día.',
       price: '$249 MXN',
-      category: 'Frases y Citas'
+      category: 'Frases y Citas',
+      stock: 10
     },
     {
       img: Imgfrases2,
       title: 'Frase en Blanco',
       description: 'Mensaje positivo en un diseño limpio.',
       price: '$259 MXN',
-      category: 'Frases y Citas'
+      category: 'Frases y Citas',
+      stock: 10
     },
     {
       img: Imgfrases3,
       title: 'Frase Minimalista',
       description: 'Ideal para un look sencillo y elegante.',
       price: '$269 MXN',
-      category: 'Frases y Citas'
+      category: 'Frases y Citas',
+      stock: 10
     },
   
     // Diseños Artísticos
@@ -58,21 +62,24 @@ const Catalog = () => {
       title: 'Playera Arte Urbano',
       description: 'Estilo retro para destacar.',
       price: '$269 MXN',
-      category: 'Diseños Artísticos'
+      category: 'Diseños Artísticos',
+      stock: 10
     },
     {
       img: Imgart2,
       title: 'Diseño de Galaxia',
       description: 'Explora el arte del universo.',
       price: '$279 MXN',
-      category: 'Diseños Artísticos'
+      category: 'Diseños Artísticos',
+      stock: 10
     },
     {
       img: Imgart3,
       title: 'Trazos Abstractos',
       description: 'Arte moderno en tu outfit diario.',
       price: '$269 MXN',
-      category: 'Diseños Artísticos'
+      category: 'Diseños Artísticos',
+      stock: 10
     },
   
     // Cultura Pop
@@ -81,21 +88,24 @@ const Catalog = () => {
       title: 'Playera Anime',
       description: 'Inspirada en tu cantante favorito.',
       price: '$249 MXN',
-      category: 'Cultura Pop'
+      category: 'Cultura Pop',
+      stock: 10
     },
     {
       img: Imgpop2,
       title: 'Cómics Retro',
       description: 'Pretty boy dirty boy.',
       price: '$259 MXN',
-      category: 'Cultura Pop'
+      category: 'Cultura Pop',
+      stock: 10
     },
     {
       img: Imgpop3,
       title: 'Cómics Retro',
       description: 'Reviviendo el rock.',
       price: '$259 MXN',
-      category: 'Cultura Pop'
+      category: 'Cultura Pop',
+      stock: 10
     },
   
     // Temporadas
@@ -104,21 +114,24 @@ const Catalog = () => {
       title: 'Playera Verano',
       description: 'Ligera y colorida para días soleados.',
       price: '$239 MXN',
-      category: 'Temporadas'
+      category: 'Temporadas',
+      stock: 10
     },
     {
       img: Imgtemp2,
       title: 'Diseño Navideño',
       description: 'Celebra la temporada con estilo.',
       price: '$279 MXN',
-      category: 'Temporadas'
+      category: 'Temporadas',
+      stock: 10
     },
     {
       img: Imgtemp3,
       title: 'Cómics Retro',
       description: 'Diseño clásico para el calor.',
       price: '$259 MXN',
-      category: 'Temporadas'
+      category: 'Temporadas',
+      stock: 10
     },
   
     // Diseños Geek y Nerd
@@ -127,21 +140,24 @@ const Catalog = () => {
       title: 'Playera Código Binario',
       description: 'Solo para verdaderos geeks.',
       price: '$259 MXN',
-      category: 'Diseños Geek y Nerd'
+      category: 'Diseños Geek y Nerd',
+      stock: 10
     },
     {
       img: Imgner2,
       title: 'Diseño Matemático',
       description: 'Estilo de poder.',
       price: '$269 MXN',
-      category: 'Diseños Geek y Nerd'
+      category: 'Diseños Geek y Nerd',
+      stock: 10
     },
     {
       img: Imgner3,
       title: 'Cómics Retro',
       description: 'Diseño colorido.',
       price: '$259 MXN',
-      category: 'Diseños Geek y Nerd'
+      category: 'Diseños Geek y Nerd',
+      stock: 10
     },
   ];
   
@@ -180,6 +196,7 @@ const Catalog = () => {
     setCart((prev) => [...prev, product]);
     console.log('Agregado al carrito:', product.title);
   };
+  
 
   const filteredProducts = products.filter(p => p.category === selectedCategory);
 
@@ -235,6 +252,10 @@ const Catalog = () => {
             <h2 style={{ fontSize: '1.5rem', color: '#2c3e50', margin: '15px 0 10px' }}>{product.title}</h2>
             <p style={{ fontSize: '1rem', color: '#7f8c8d' }}>{product.description}</p>
             <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#34495e', marginTop: '10px' }}>{product.price}</p>
+            <p style={{ fontSize: '1rem', color: '#27ae60', marginTop: '10px' }}> 
+              En existencia: {product.stock}
+              </p>
+
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '15px' }}>
               <button
