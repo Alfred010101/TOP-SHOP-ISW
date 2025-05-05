@@ -44,19 +44,6 @@ CREATE TABLE IF NOT EXISTS top_shop.tshirts(
     PRIMARY KEY(id)
 );
 
-CREATE TABLE IF NOT EXISTS top_shop.tshirtss(
-	id INT AUTO_INCREMENT NOT NULL,
-    `name` VARCHAR(31),
-    `type` ENUM('hombre', 'mujer', 'niño', 'niña') NOT NULL,
-	cuello ENUM('redondo', 'v', 'polo') NOT NULL,
-    manga ENUM('corta', 'larga', 'sin_mangas') NOT NULL,
-    talla ENUM('XS', 'S', 'M', 'L', 'XL', 'XXL') NOT NULL,
-    color ENUM('blanco', 'negro', 'rojo', 'azul', 'verde') NOT NULL,
-    price DECIMAL(6, 2),
-    `description` VARCHAR(127),
-    PRIMARY KEY(id)
-);
-
 CREATE TABLE IF NOT EXISTS top_shop.shopping_cart(
 	id INT AUTO_INCREMENT NOT NULL,
     fk_user INT NOT NULL,
@@ -65,10 +52,11 @@ CREATE TABLE IF NOT EXISTS top_shop.shopping_cart(
 );
 
 CREATE TABLE IF NOT EXISTS top_shop.shopping_cart_items(
+	id INT AUTO_INCREMENT NOT NULL,
     fk_cart INT NOT NULL,
     fk_tshirt INT NOT NULL,
     amount INT NOT NULL CHECK (amount > 0),
-	PRIMARY KEY(fk_cart, fk_tshirt),
+	PRIMARY KEY(id),
     FOREIGN KEY(fk_cart) REFERENCES top_shop.shopping_cart(id),
     FOREIGN KEY(fk_tshirt) REFERENCES top_shop.tshirts(id)
 );

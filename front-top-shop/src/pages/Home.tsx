@@ -7,6 +7,7 @@ import Image2 from "../assets/img2.jpg";
 import Image3 from "../assets/img3.jpg";
 import Image4 from "../assets/img4.jpg";
 import Image5 from "../assets/img5.jpg";
+import { getUserEmailFromToken } from "../context/AuthContext";
 
 interface Product {
   id: number;
@@ -68,13 +69,45 @@ const Home = () => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  const handleBuyNow = (product: Product) => {
-    console.log("Comprar ahora:", product.title);
-  };
+  const handleAddToCart = async (product: Product) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Usuario no autenticado");
+      return;
+    }
 
-  const handleAddToCart = (product: Product) => {
-    setCart((prevCart) => [...prevCart, product]);
-    console.log("Producto agregado al carrito:", product.title);
+    const email = getUserEmailFromToken(token);
+    if (!email) {
+      alert("Token inválido");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/user/shoppingCart/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: product.id,
+            email: email,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setCart((prevCart) => [...prevCart, product]);
+        alert("Producto agregado correctamente al carrito.");
+      } else {
+        alert("Error al agregar el producto al carrito.");
+      }
+    } catch (err) {
+      console.error("Error al agregar al carrito:", err);
+      alert("Hubo un problema al agregar el producto.");
+    }
   };
 
   return (

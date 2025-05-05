@@ -13,6 +13,7 @@ import com.back_top_shop.model.User;
 import com.back_top_shop.jwt.JwtService;
 import com.back_top_shop.model.Role;
 import com.back_top_shop.repository.UserRepository;
+import com.back_top_shop.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ public class AuthService
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
     public ResponseEntity<?> login(LoginRequest request) 
     {
@@ -64,7 +66,7 @@ public class AuthService
             .role(Role.CUSTOMER)
             .build();
 
-        userRepository.save(user);
+        userService.createUser(user);
 
         return AuthResponse.builder()
             .token(jwtService.getToken(user))
