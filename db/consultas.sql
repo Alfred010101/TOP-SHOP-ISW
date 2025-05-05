@@ -1,0 +1,13 @@
+SELECT * FROM top_shop.users;
+SELECT * FROM top_shop.address;
+
+delete from top_shop.address where id = 18;
+delete from top_shop.users where id = 18;
+update top_shop.users 
+set role ='ADMIN'
+where id = 13;
+
+SELECT * FROM top_shop.users 
+WHERE email = 'usuariX';
+
+drop database top_shop;

@@ -49,9 +49,9 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar 
-      position="fixed" 
-      sx={{ 
+    <AppBar
+      position="fixed"
+      sx={{
         zIndex: 1300,
         boxShadow: "none",
         borderBottom: "1px solid #e0e0e0",
@@ -59,26 +59,28 @@ const Navbar = () => {
         color: "black", // Color de texto principal
       }}
     >
-      <Toolbar sx={{ 
-        justifyContent: "space-between",
-        gap: 2,
-        padding: "8px 16px !important"
-      }}>
+      <Toolbar
+        sx={{
+          justifyContent: "space-between",
+          gap: 2,
+          padding: "8px 16px !important",
+        }}
+      >
         {/* Logo */}
         <Typography
           variant="h6"
           component={RouterLink}
           to="/home"
-          sx={{ 
-            textDecoration: "none", 
-            color: "inherit", 
-            fontWeight: "bold", 
+          sx={{
+            textDecoration: "none",
+            color: "inherit",
+            fontWeight: "bold",
             flexShrink: 0,
-            '& img': { 
+            "& img": {
               maxWidth: { xs: "70px", md: "70px" }, // Tamaño responsive corregido
               height: "auto",
-              objectFit: "contain"
-            }
+              objectFit: "contain",
+            },
           }}
         >
           <img
@@ -88,17 +90,19 @@ const Navbar = () => {
         </Typography>
 
         {/* Menú principal */}
-        <Box sx={{ 
-          display: { xs: "none", md: "flex" },
-          gap: 2,
-          alignItems: "center"
-        }}>
-          <Button 
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            gap: 2,
+            alignItems: "center",
+          }}
+        >
+          <Button
             component={RouterLink}
             to="/home"
-            sx={{ 
+            sx={{
               color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
             }}
           >
             Inicio
@@ -106,9 +110,9 @@ const Navbar = () => {
           <Button
             component={RouterLink}
             to="/catalogo"
-            sx={{ 
+            sx={{
               color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
             }}
           >
             Catálogo
@@ -116,38 +120,38 @@ const Navbar = () => {
           <Button
             component={RouterLink}
             to="/design"
-            sx={{ 
+            sx={{
               color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
             }}
           >
             Diseños
           </Button>
-          <Button 
+          <Button
             component={RouterLink}
             to="/como-funciona"
-            sx={{ 
+            sx={{
               color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
             }}
           >
             Guía
           </Button>
-          <Button 
+          <Button
             component={RouterLink}
             to="/about"
-            sx={{ 
+            sx={{
               color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
             }}
           >
-           Sobre Nosotros
+            Sobre Nosotros
           </Button>
-          <Button 
+          <Button
             onClick={handleOpenMenu}
-            sx={{ 
+            sx={{
               color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" }
+              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
             }}
           >
             Más <MoreVertIcon fontSize="small" sx={{ color: "black" }} />
@@ -171,19 +175,16 @@ const Navbar = () => {
         {/* Íconos laterales */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Tooltip title="Carrito">
-            <IconButton 
-              component={RouterLink} 
-              to="/carrito"
+            <IconButton
+              component={RouterLink}
+              to="/car"
               sx={{ color: "black" }}
             >
               <ShoppingCartIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Mi cuenta">
-            <IconButton 
-              onClick={handleOpenUserMenu}
-              sx={{ color: "black" }}
-            >
+            <IconButton onClick={handleOpenUserMenu} sx={{ color: "black" }}>
               <AccountCircleIcon />
             </IconButton>
           </Tooltip>
@@ -201,13 +202,6 @@ const Navbar = () => {
             onClick={handleCloseUserMenu}
           >
             Mi perfil
-          </MenuItem>
-          <MenuItem
-            component={RouterLink}
-            to="/historial-compras"
-            onClick={handleCloseUserMenu}
-          >
-            Historial de compras
           </MenuItem>
           <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
         </Menu>

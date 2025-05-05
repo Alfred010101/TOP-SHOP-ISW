@@ -23,7 +23,7 @@ const PerfilPage = () => {
           [`& .MuiDrawer-paper`]: {
             width: 240,
             boxSizing: "border-box",
-            top: 60, // espacio para el AppBar
+            top: 90, // espacio para el AppBar
           },
         }}
       >
