@@ -1,5 +1,6 @@
 SELECT * FROM top_shop.users;
 SELECT * FROM top_shop.address;
+SELECT * FROM top_shop.tshirts;
 
 delete from top_shop.address where id = 18;
 delete from top_shop.users where id = 18;

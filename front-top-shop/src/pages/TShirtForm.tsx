@@ -90,9 +90,9 @@ const TShirtForm: React.FC = () => {
       const res = await fetch("http://localhost:8080/api/tshirts/register", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`, // Solo el token en los encabezados
+          Authorization: `Bearer ${token}`,
         },
-        body: data, // FormData se encarga del Content-Type automáticamente
+        body: data,
       });
 
       if (!res.ok) throw new Error("Error en la respuesta");

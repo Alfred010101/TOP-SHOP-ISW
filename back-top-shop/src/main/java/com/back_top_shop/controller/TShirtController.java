@@ -2,15 +2,15 @@ package com.back_top_shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.back_top_shop.model.TShirt;
-import com.back_top_shop.repository.TShirtRepository;
+import com.back_top_shop.service.TShirtService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:5173") 
@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TShirtController {
 
-    private final TShirtRepository tshirtRepository;
+    private final TShirtService tshirtService;
 
     @Value("${upload.dir}")
     private String uploadDir;
@@ -64,7 +64,19 @@ public class TShirtController {
         tshirt.setExistence(existence);
         tshirt.setDescription(description);
 
-        return tshirtRepository.save(tshirt);
+        return tshirtService.save(tshirt);
+    }
+
+    @GetMapping("/list")
+    public List<TShirt> listarImagenesAll() 
+    {
+        return tshirtService.findAll();
+    }
+
+    @GetMapping("/last")
+    public List<TShirt> listarImagenesLast() 
+    {
+        return tshirtService.findLast();
     }
 
     @GetMapping("/saludar")
