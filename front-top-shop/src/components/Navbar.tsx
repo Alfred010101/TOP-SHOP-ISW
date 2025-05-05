@@ -160,12 +160,8 @@ const Navbar = () => {
 
         {/* Menú desplegable secundario */}
         <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
-          <MenuItem
-            component={RouterLink}
-            to="/opiniones"
-            onClick={handleCloseMenu}
-          >
-            Opiniones
+          <MenuItem component={RouterLink} to="/reg" onClick={handleCloseMenu}>
+            Registrar
           </MenuItem>
           <MenuItem component={RouterLink} to="/faq" onClick={handleCloseMenu}>
             FAQ

@@ -27,6 +27,25 @@ CREATE TABLE IF NOT EXISTS top_shop.users(
 
 CREATE TABLE IF NOT EXISTS top_shop.tshirts(
 	id INT AUTO_INCREMENT NOT NULL,
+    title VARCHAR(31),
+    `resource` VARCHAR(63) NOT NULL,
+    category ENUM(
+		'FRASES_Y_CITAS',
+        'DISENOS_ARTISTICOS',
+        'CULTURA_POP',
+        'TEMPORADAS',
+        'DISENOS_GEEK_Y_NERD'
+	),
+    `type` ENUM('HOMBRE', 'MUJER', 'NINO', 'NINA') NOT NULL,
+    talla ENUM('XS', 'S', 'M', 'L', 'XL', 'XXL') NOT NULL,
+    price DECIMAL(6, 2),
+    existence INT,
+    `description` VARCHAR(127),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS top_shop.tshirtss(
+	id INT AUTO_INCREMENT NOT NULL,
     `name` VARCHAR(31),
     `type` ENUM('hombre', 'mujer', 'niño', 'niña') NOT NULL,
 	cuello ENUM('redondo', 'v', 'polo') NOT NULL,

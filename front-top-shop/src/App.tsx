@@ -41,6 +41,7 @@ import ProtectedLayout from "./components/ProtectedLayout";
 import Home from "./pages/Home";
 import CustomDesign from "./pages/CustomDesign";
 import PerfilPage from "./pages/PerfilPage";
+import TShirtForm from "./pages/TShirtForm";
 
 function App() {
   return (
@@ -57,7 +58,7 @@ function App() {
             <Route path="/catalogo" element={<Catalog />} />
             <Route path="/about" element={<About />} />
             <Route path="/como-funciona" element={<HowItWorks />} />
-            <Route path="/opiniones" element={<Testimonials />} />
+            <Route path="/reg" element={<TShirtForm />} />
             <Route path="/car/*" element={<Cart />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/account/*" element={<PerfilPage />} />

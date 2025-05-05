@@ -10,4 +10,12 @@ where id = 13;
 SELECT * FROM top_shop.users 
 WHERE email = 'usuariX';
 
+ALTER TABLE top_shop.tshirts
+ADD COLUMN `resource` VARCHAR(63) NOT NULL;
+
+
 drop database top_shop;
+
+drop table top_shop.tshirts;
+
+show  tables from top_shop;
