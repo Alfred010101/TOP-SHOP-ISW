@@ -1,8 +1,16 @@
-import { Box, Typography, Container, Grid, Paper } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Container,
+  Grid,
+  Paper,
+  Toolbar,
+} from "@mui/material";
 
 const About = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 8, mb: 4 }}>
+      <Toolbar></Toolbar>
       <Typography variant="h4" gutterBottom fontWeight="bold">
         Sobre Nosotros
       </Typography>

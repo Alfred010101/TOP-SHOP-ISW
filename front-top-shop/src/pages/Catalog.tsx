@@ -209,6 +209,10 @@ const Catalog = () => {
                 Existencia: <strong>{product.existence}</strong>
               </p>
 
+              <p style={{ fontSize: "0.95rem", color: "#555" }}>
+                Talla: <strong>{product.talla}</strong>
+              </p>
+
               <div
                 style={{
                   display: "flex",
