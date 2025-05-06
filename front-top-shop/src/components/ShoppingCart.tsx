@@ -147,10 +147,26 @@ const ShoppingCart: React.FC = () => {
       </Typography>
 
       {cartItems.map((item) => (
-        <Card key={item.id} sx={{ display: "flex", mb: 2 }}>
+        <Card
+          key={item.id}
+          sx={{
+            display: "flex",
+            mb: 2,
+            border: "1px solid #ccc",
+            borderRadius: 2,
+            boxShadow: 2,
+            overflow: "hidden",
+          }}
+        >
           <CardMedia
             component="img"
-            sx={{ width: 140, objectFit: "cover", height: 140 }}
+            sx={{
+              marginTop: 2,
+              marginLeft: 2,
+              width: 200,
+              height: 200,
+              objectFit: "cover",
+            }}
             image={`http://localhost:8080/imgs/${item.resource}`}
             alt={item.title}
           />
@@ -163,26 +179,34 @@ const ShoppingCart: React.FC = () => {
               ${item.price.toFixed(2)}
             </Typography>
 
-            <Box display="flex" alignItems="center" mt={2}>
-              <IconButton
+            <Box display="flex" alignItems="center" gap={1} mt={2}>
+              <Button
+                variant="outlined"
+                size="small"
                 onClick={() => handleAmountChange(item.fkTshirt, -1)}
                 disabled={item.amount <= 1}
               >
-                <Remove />
-              </IconButton>
+                <Remove fontSize="small" />
+              </Button>
+
               <Typography>{item.amount}</Typography>
-              <IconButton onClick={() => handleAmountChange(item.fkTshirt, 1)}>
-                <Add />
-              </IconButton>
+
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => handleAmountChange(item.fkTshirt, 1)}
+              >
+                <Add fontSize="small" />
+              </Button>
+
               <IconButton
                 color="error"
                 onClick={() => handleDelete(item.fkTshirt)}
                 sx={{
                   ml: "auto",
-                  color: "error.main",
                   transition: "0.3s",
                   "&:hover": {
-                    backgroundColor: "#CCC",
+                    backgroundColor: "#eee",
                   },
                 }}
               >
