@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from "react";
+import { getUserEmailFromToken } from "../context/AuthContext";
 
 interface Product {
+  id: number;
   resource: string;
   title: string;
   description: string;
   price: string;
   category: string;
-  stock: number;
+  existence: number;
+  talla: string;
 }
 
 const categoryLabels: Record<string, string> = {
@@ -62,9 +65,45 @@ const Catalog = () => {
     }, 100);
   };
 
-  const handleAddToCart = (product: Product) => {
-    setCart((prev) => [...prev, product]);
-    console.log("Agregado al carrito:", product.title);
+  const handleAddToCart = async (product: Product) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Usuario no autenticado");
+      return;
+    }
+
+    const email = getUserEmailFromToken(token);
+    if (!email) {
+      alert("Token inválido");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/user/shoppingCart/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: product.id,
+            email: email,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setCart((prevCart) => [...prevCart, product]);
+        alert("Producto agregado correctamente al carrito.");
+      } else {
+        alert("Error al agregar el producto al carrito.");
+      }
+    } catch (err) {
+      console.error("Error al agregar al carrito:", err);
+      alert("Hubo un problema al agregar el producto.");
+    }
   };
 
   return (
@@ -167,7 +206,7 @@ const Catalog = () => {
               </p>
 
               <p style={{ fontSize: "0.95rem", color: "#555" }}>
-                Existencia: <strong>{product.stock}</strong>
+                Existencia: <strong>{product.existence}</strong>
               </p>
 
               <div
@@ -181,29 +220,29 @@ const Catalog = () => {
                 <button
                   style={{
                     backgroundColor:
-                      product.stock === 0 ? "#bdc3c7" : "#9b59b6",
+                      product.existence === 0 ? "#bdc3c7" : "#9b59b6",
                     color: "#fff",
                     border: "none",
                     padding: "10px",
                     borderRadius: "8px",
-                    cursor: product.stock === 0 ? "not-allowed" : "pointer",
+                    cursor: product.existence === 0 ? "not-allowed" : "pointer",
                     fontWeight: "bold",
                     transition: "background-color 0.3s ease",
                   }}
-                  disabled={product.stock === 0}
+                  disabled={product.existence === 0}
                   onMouseEnter={(e) => {
-                    if (product.stock > 0) {
+                    if (product.existence > 0) {
                       e.currentTarget.style.backgroundColor = "#2c3e50";
                     }
                   }}
                   onMouseLeave={(e) => {
-                    if (product.stock > 0) {
+                    if (product.existence > 0) {
                       e.currentTarget.style.backgroundColor = "#9b59b6";
                     }
                   }}
                   onClick={() => handleAddToCart(product)}
                 >
-                  {product.stock === 0 ? "Sin stock" : "Agregar al carrito"}
+                  {product.existence === 0 ? "Sin stock" : "Agregar al carrito"}
                 </button>
               </div>
             </div>

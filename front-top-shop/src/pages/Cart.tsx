@@ -7,7 +7,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
-import ItemsCart from "../components/ItemsCart";
+import ShoppingCart from "../components/ShoppingCart";
 import History from "../components/History";
 
 const Cart = () => {
@@ -56,8 +56,8 @@ const Cart = () => {
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Routes>
-          <Route path="/" element={<ItemsCart />} />
-          <Route path="items" element={<ItemsCart />} />
+          <Route path="/" element={<ShoppingCart />} />
+          <Route path="items" element={<ShoppingCart />} />
           <Route path="history" element={<History />} />
         </Routes>
       </Box>
