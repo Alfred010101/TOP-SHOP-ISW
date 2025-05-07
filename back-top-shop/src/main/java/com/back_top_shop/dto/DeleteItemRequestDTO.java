@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddToCartRequestDTO 
-{
-    private Integer productId;
+public class DeleteItemRequestDTO {
     private String email;
-} 
+    private Integer fkTshirt;
+}

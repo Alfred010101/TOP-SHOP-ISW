@@ -7,6 +7,10 @@ import {
   IconButton,
   Button,
   Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { Add, Remove, Delete } from "@mui/icons-material";
 import { getUserEmailFromToken } from "../context/AuthContext";
@@ -23,6 +27,26 @@ interface CartItem {
 
 const ShoppingCart: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<number | null>(null);
+
+  const openConfirmDialog = (fkTshirt: number) => {
+    setSelectedItem(fkTshirt);
+    setConfirmOpen(true);
+  };
+
+  const closeConfirmDialog = () => {
+    setSelectedItem(null);
+    setConfirmOpen(false);
+  };
+
+  const confirmDelete = () => {
+    if (selectedItem !== null) {
+      handleDelete(selectedItem);
+    }
+    closeConfirmDialog();
+  };
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -112,7 +136,7 @@ const ShoppingCart: React.FC = () => {
     }
 
     const response = await fetch(
-      "http://localhost:8080/api/v1/user/shoppingCart/delete-item",
+      "http://localhost:8080/api/v1/user/shoppingCart/deleteItem",
       {
         method: "DELETE",
         headers: {
@@ -201,12 +225,12 @@ const ShoppingCart: React.FC = () => {
 
               <IconButton
                 color="error"
-                onClick={() => handleDelete(item.fkTshirt)}
+                onClick={() => openConfirmDialog(item.fkTshirt)}
                 sx={{
                   ml: "auto",
                   transition: "0.3s",
                   "&:hover": {
-                    backgroundColor: "#eee",
+                    backgroundColor: "#ccc",
                   },
                 }}
               >
@@ -252,6 +276,22 @@ const ShoppingCart: React.FC = () => {
           Proceder a pagar
         </Button>
       )}
+      <Dialog open={confirmOpen} onClose={closeConfirmDialog}>
+        <DialogTitle>¿Eliminar producto?</DialogTitle>
+        <DialogContent>
+          <Typography>
+            ¿Estás seguro de que quieres eliminar este producto del carrito?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeConfirmDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={confirmDelete} color="error" variant="contained">
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
