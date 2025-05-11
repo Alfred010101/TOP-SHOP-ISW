@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import {
   Box,
   Button,
@@ -9,11 +9,6 @@ import {
   Paper,
   Modal,
   IconButton,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -28,16 +23,8 @@ interface TShirtFormData {
   description: string;
 }
 
-interface TShirt {
-  id: number;
-  title: string;
-  resource: string;
-  category: string;
-  type: string;
-  talla: string;
-  price: number;
-  existence: number;
-  description: string;
+interface TShirtFormProps {
+  onSaveSuccess?: () => void;
 }
 
 const categories = [
@@ -57,7 +44,7 @@ const types = [
 
 const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
-const TShirtForm: React.FC = () => {
+const TShirtForm: React.FC<TShirtFormProps> = ({ onSaveSuccess }) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<TShirtFormData>({
     title: "",
@@ -70,26 +57,6 @@ const TShirtForm: React.FC = () => {
     description: "",
   });
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [tshirts, setTshirts] = useState<TShirt[]>([]);
-
-  const fetchTShirts = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const res = await fetch("http://localhost:8080/api/tshirts/list", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      setTshirts(data);
-    } catch (error) {
-      alert("Error al obtener camisetas");
-    }
-  };
-
-  useEffect(() => {
-    fetchTShirts();
-  }, []);
 
   const handleChange =
     (key: keyof TShirtFormData) =>
@@ -153,7 +120,7 @@ const TShirtForm: React.FC = () => {
       alert("Camiseta guardada con éxito.");
       handleClear();
       setOpen(false);
-      fetchTShirts(); // refrescar lista
+      onSaveSuccess?.(); // Llama a la función para recargar la tabla
     } catch (error) {
       alert("Error al guardar la camiseta.");
     }
@@ -349,40 +316,6 @@ const TShirtForm: React.FC = () => {
           </Grid>
         </Box>
       </Modal>
-
-      {/* Tabla de camisetas */}
-      <Table sx={{ mt: 4 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Título</TableCell>
-            <TableCell>Tipo</TableCell>
-            <TableCell>Talla</TableCell>
-            <TableCell>Categoría</TableCell>
-            <TableCell>Precio</TableCell>
-            <TableCell>Stock</TableCell>
-            <TableCell>Imagen</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {tshirts.map((shirt) => (
-            <TableRow key={shirt.id}>
-              <TableCell>{shirt.title}</TableCell>
-              <TableCell>{shirt.type}</TableCell>
-              <TableCell>{shirt.talla}</TableCell>
-              <TableCell>{shirt.category}</TableCell>
-              <TableCell>${shirt.price.toFixed(2)}</TableCell>
-              <TableCell>{shirt.existence}</TableCell>
-              <TableCell>
-                <img
-                  src={`http://localhost:8080/imgs/${shirt.resource}`}
-                  alt={shirt.title}
-                  style={{ width: 60, borderRadius: 4 }}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
     </>
   );
 };

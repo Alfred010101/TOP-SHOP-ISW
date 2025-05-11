@@ -40,7 +40,7 @@ import ProtectedLayout from "./components/ProtectedLayout";
 import Home from "./pages/Home";
 import CustomDesign from "./pages/CustomDesign";
 import PerfilPage from "./pages/PerfilPage";
-import TShirtForm from "./pages/TShirtForm";
+import TShirtForm from "./pages/TShirtReg";
 
 function App() {
   return (
