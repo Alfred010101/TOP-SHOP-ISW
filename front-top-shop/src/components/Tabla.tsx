@@ -8,12 +8,15 @@ import {
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   TextField,
+  MenuItem,
+  Typography,
+  Grid,
+  Paper,
+  Modal,
+  IconButton,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface Tshirt {
   id: number;
@@ -31,6 +34,23 @@ interface TablaRegistrosProps {
   refresh?: boolean;
 }
 
+const categories = [
+  { label: "Frases y Citas", value: "FRASES_Y_CITAS" },
+  { label: "Diseños Artísticos", value: "DISENOS_ARTISTICOS" },
+  { label: "Cultura Pop", value: "CULTURA_POP" },
+  { label: "Temporadas", value: "TEMPORADAS" },
+  { label: "Diseños Geek y Nerd", value: "DISENOS_GEEK_Y_NERD" },
+];
+
+const types = [
+  { label: "Hombre", value: "HOMBRE" },
+  { label: "Mujer", value: "MUJER" },
+  { label: "Niño", value: "NINO" },
+  { label: "Niña", value: "NINA" },
+];
+
+const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+
 const TablaRegistros: React.FC<TablaRegistrosProps> = ({ refresh }) => {
   const [tshirts, setTshirts] = useState<Tshirt[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -41,6 +61,7 @@ const TablaRegistros: React.FC<TablaRegistrosProps> = ({ refresh }) => {
 
   const [editOpen, setEditOpen] = useState(false);
   const [selectedTshirt, setSelectedTshirt] = useState<Tshirt | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const fetchTshirts = () => {
     setLoading(true);
@@ -58,10 +79,11 @@ const TablaRegistros: React.FC<TablaRegistrosProps> = ({ refresh }) => {
 
   useEffect(() => {
     fetchTshirts();
-  }, [refresh]); // Se ejecuta cuando cambia 'refresh'
+  }, [refresh]);
 
   const handleEditClick = (tshirt: Tshirt) => {
     setSelectedTshirt(tshirt);
+    setPreviewUrl(`http://localhost:8080/imgs/${tshirt.resource}`);
     setEditOpen(true);
   };
 
@@ -70,23 +92,57 @@ const TablaRegistros: React.FC<TablaRegistrosProps> = ({ refresh }) => {
       fetch(`http://localhost:8080/api/tshirts/delete/${id}`, {
         method: "DELETE",
       })
-        .then(() => fetchTshirts()) // Recarga los datos después de eliminar
+        .then(() => fetchTshirts())
         .catch((err) => console.error("Error eliminando:", err));
     }
   };
 
-  const handleEditSave = () => {
-    if (selectedTshirt) {
-      fetch(`http://localhost:8080/api/tshirts/update/${selectedTshirt.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(selectedTshirt),
-      })
-        .then(() => {
-          fetchTshirts(); // Recarga los datos después de editar
-          setEditOpen(false);
-        })
-        .catch((err) => console.error("Error actualizando:", err));
+  const handleChange =
+    (key: keyof Tshirt) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (selectedTshirt) {
+        setSelectedTshirt({
+          ...selectedTshirt,
+          [key]: e.target.value,
+        });
+      }
+    };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPreviewUrl(URL.createObjectURL(file));
+      if (selectedTshirt) {
+        // Aquí podrías manejar el archivo para la actualización
+        // Nota: Necesitarías adaptar tu backend para manejar la actualización de imágenes
+      }
+    }
+  };
+
+  const handleEditSave = async () => {
+    if (!selectedTshirt) return;
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/tshirts/update/${selectedTshirt.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(selectedTshirt),
+        }
+      );
+
+      if (!res.ok) throw new Error("Error en la respuesta");
+
+      alert("Camiseta actualizada con éxito.");
+      fetchTshirts();
+      setEditOpen(false);
+    } catch (error) {
+      alert("Error al actualizar la camiseta.");
     }
   };
 
@@ -159,104 +215,193 @@ const TablaRegistros: React.FC<TablaRegistrosProps> = ({ refresh }) => {
       </div>
 
       {/* Modal de edición */}
-      <Dialog open={editOpen} onClose={() => setEditOpen(false)}>
-        <DialogTitle>Editar camiseta</DialogTitle>
-        <DialogContent>
-          {selectedTshirt && (
-            <>
-              <TextField
-                label="Título"
-                fullWidth
-                margin="dense"
-                value={selectedTshirt.title}
-                onChange={(e) =>
-                  setSelectedTshirt({
-                    ...selectedTshirt,
-                    title: e.target.value,
-                  })
-                }
-              />
-              <TextField
-                label="Tipo"
-                fullWidth
-                margin="dense"
-                value={selectedTshirt.type}
-                onChange={(e) =>
-                  setSelectedTshirt({ ...selectedTshirt, type: e.target.value })
-                }
-              />
-              <TextField
-                label="Talla"
-                fullWidth
-                margin="dense"
-                value={selectedTshirt.talla}
-                onChange={(e) =>
-                  setSelectedTshirt({
-                    ...selectedTshirt,
-                    talla: e.target.value,
-                  })
-                }
-              />
-              <TextField
-                label="Categoría"
-                fullWidth
-                margin="dense"
-                value={selectedTshirt.category}
-                onChange={(e) =>
-                  setSelectedTshirt({
-                    ...selectedTshirt,
-                    category: e.target.value,
-                  })
-                }
-              />
-              <TextField
-                label="Precio"
-                type="number"
-                fullWidth
-                margin="dense"
-                value={selectedTshirt.price}
-                onChange={(e) =>
-                  setSelectedTshirt({
-                    ...selectedTshirt,
-                    price: parseFloat(e.target.value),
-                  })
-                }
-              />
-              <TextField
-                label="Stock"
-                type="number"
-                fullWidth
-                margin="dense"
-                value={selectedTshirt.existence}
-                onChange={(e) =>
-                  setSelectedTshirt({
-                    ...selectedTshirt,
-                    existence: parseInt(e.target.value),
-                  })
-                }
-              />
-              <TextField
-                label="Descripción"
-                fullWidth
-                margin="dense"
-                value={selectedTshirt.description}
-                onChange={(e) =>
-                  setSelectedTshirt({
-                    ...selectedTshirt,
-                    description: e.target.value,
-                  })
-                }
-              />
-            </>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setEditOpen(false)}>Cancelar</Button>
-          <Button onClick={handleEditSave} variant="contained">
-            Guardar
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Modal open={editOpen} onClose={() => setEditOpen(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "90%",
+            maxWidth: 900,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            borderRadius: 2,
+            p: 4,
+            maxHeight: "90vh",
+            overflowY: "auto",
+          }}
+        >
+          <Box display="flex" justifyContent="space-between" mb={2}>
+            <Typography variant="h5">Editar Camiseta</Typography>
+            <IconButton onClick={() => setEditOpen(false)}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={6}>
+              <Box component="form">
+                <TextField
+                  label="Título"
+                  fullWidth
+                  required
+                  size="small"
+                  margin="dense"
+                  value={selectedTshirt?.title || ""}
+                  onChange={handleChange("title")}
+                />
+
+                <TextField
+                  select
+                  label="Categoría"
+                  fullWidth
+                  required
+                  size="small"
+                  margin="dense"
+                  value={selectedTshirt?.category || ""}
+                  onChange={handleChange("category")}
+                >
+                  {categories.map((cat) => (
+                    <MenuItem key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+                <TextField
+                  select
+                  label="Tipo"
+                  fullWidth
+                  required
+                  size="small"
+                  margin="dense"
+                  value={selectedTshirt?.type || ""}
+                  onChange={handleChange("type")}
+                >
+                  {types.map((t) => (
+                    <MenuItem key={t.value} value={t.value}>
+                      {t.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+                <TextField
+                  select
+                  label="Talla"
+                  fullWidth
+                  required
+                  size="small"
+                  margin="dense"
+                  value={selectedTshirt?.talla || ""}
+                  onChange={handleChange("talla")}
+                >
+                  {sizes.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {s}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+                <TextField
+                  label="Precio"
+                  type="number"
+                  fullWidth
+                  required
+                  size="small"
+                  margin="dense"
+                  inputProps={{ min: 0, step: 0.01 }}
+                  value={selectedTshirt?.price || ""}
+                  onChange={handleChange("price")}
+                />
+
+                <TextField
+                  label="Existencia"
+                  type="number"
+                  fullWidth
+                  required
+                  size="small"
+                  margin="dense"
+                  inputProps={{ min: 0 }}
+                  value={selectedTshirt?.existence || ""}
+                  onChange={handleChange("existence")}
+                />
+
+                <TextField
+                  label="Descripción"
+                  fullWidth
+                  multiline
+                  rows={3}
+                  margin="dense"
+                  value={selectedTshirt?.description || ""}
+                  onChange={handleChange("description")}
+                />
+
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      onClick={handleEditSave}
+                      fullWidth
+                    >
+                      Guardar Cambios
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => setEditOpen(false)}
+                      fullWidth
+                    >
+                      Cancelar
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <Paper sx={{ p: 2, textAlign: "center" }}>
+                <Button
+                  variant="outlined"
+                  component="label"
+                  fullWidth
+                  size="small"
+                  sx={{ mb: 2 }}
+                >
+                  Cambiar Imagen
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                </Button>
+
+                {previewUrl && (
+                  <>
+                    <Typography variant="body2" gutterBottom>
+                      Vista previa:
+                    </Typography>
+                    <Box
+                      component="img"
+                      src={previewUrl}
+                      alt="preview"
+                      sx={{
+                        width: "100%",
+                        maxWidth: 300,
+                        borderRadius: 2,
+                        boxShadow: 3,
+                      }}
+                    />
+                  </>
+                )}
+              </Paper>
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
     </>
   );
 };
