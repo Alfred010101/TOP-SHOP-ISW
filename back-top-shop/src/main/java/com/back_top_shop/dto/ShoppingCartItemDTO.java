@@ -9,4 +9,5 @@ public interface ShoppingCartItemDTO
     String getResource();
     String getDescription();
     Double getPrice();
+    int getExistence();
 }

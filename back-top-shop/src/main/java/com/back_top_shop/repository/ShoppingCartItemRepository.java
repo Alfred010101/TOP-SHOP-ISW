@@ -23,7 +23,8 @@ public interface ShoppingCartItemRepository extends JpaRepository<ShoppingCartIt
            t.title AS title,
            t.resource AS resource,
            t.description AS description,
-           t.price AS price
+           t.price AS price,
+           t.existence
     FROM shopping_cart_items sci
     JOIN shopping_cart sc ON sci.fk_cart = sc.id
     JOIN users u ON sc.fk_user = u.id

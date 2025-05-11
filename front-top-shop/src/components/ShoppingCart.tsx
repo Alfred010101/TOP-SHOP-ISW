@@ -23,6 +23,7 @@ interface CartItem {
   resource: string;
   description: string;
   price: number;
+  existence: number;
 }
 
 const ShoppingCart: React.FC = () => {
@@ -200,7 +201,10 @@ const ShoppingCart: React.FC = () => {
               {item.description}
             </Typography>
             <Typography variant="subtitle1" sx={{ mt: 1 }}>
-              ${item.price.toFixed(2)}
+              Existencia: {item.existence}
+            </Typography>
+            <Typography variant="subtitle1" sx={{ mt: 1 }}>
+              Precio Unitario: ${item.price.toFixed(2)}
             </Typography>
 
             <Box display="flex" alignItems="center" gap={1} mt={2}>
@@ -219,6 +223,7 @@ const ShoppingCart: React.FC = () => {
                 variant="outlined"
                 size="small"
                 onClick={() => handleAmountChange(item.fkTshirt, 1)}
+                disabled={item.amount === item.existence}
               >
                 <Add fontSize="small" />
               </Button>
