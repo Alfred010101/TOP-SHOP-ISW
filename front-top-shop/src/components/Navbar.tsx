@@ -83,10 +83,7 @@ const Navbar = () => {
             },
           }}
         >
-          <img
-            src={logo} // Usa la importación
-            alt="Top-shop logo"
-          />
+          <img src={logo} alt="Top-shop logo" />
         </Typography>
 
         {/* Menú principal */}
@@ -95,6 +92,8 @@ const Navbar = () => {
             display: { xs: "none", md: "flex" },
             gap: 2,
             alignItems: "center",
+            ml: "auto",
+            marginRight: 5,
           }}
         >
           <Button
@@ -102,7 +101,10 @@ const Navbar = () => {
             to="/home"
             sx={{
               color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
+              "&:hover": {
+                background: "#9b59b6",
+                color: "#bdc3c7",
+              },
             }}
           >
             Inicio
@@ -112,37 +114,23 @@ const Navbar = () => {
             to="/catalogo"
             sx={{
               color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
+              "&:hover": {
+                background: "#9b59b6",
+                color: "#bdc3c7",
+              },
             }}
           >
             Catálogo
           </Button>
           <Button
             component={RouterLink}
-            to="/design"
-            sx={{
-              color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
-            }}
-          >
-            Diseños
-          </Button>
-          <Button
-            component={RouterLink}
-            to="/como-funciona"
-            sx={{
-              color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
-            }}
-          >
-            Guía
-          </Button>
-          <Button
-            component={RouterLink}
             to="/about"
             sx={{
               color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
+              "&:hover": {
+                background: "#9b59b6",
+                color: "#bdc3c7",
+              },
             }}
           >
             Sobre Nosotros
@@ -151,7 +139,10 @@ const Navbar = () => {
             onClick={handleOpenMenu}
             sx={{
               color: "black",
-              "&:hover": { color: "rgba(0, 0, 0, 0.7)" },
+              "&:hover": {
+                background: "#9b59b6",
+                color: "#bdc3c7",
+              },
             }}
           >
             Más <MoreVertIcon fontSize="small" sx={{ color: "black" }} />
@@ -160,10 +151,30 @@ const Navbar = () => {
 
         {/* Menú desplegable secundario */}
         <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
-          <MenuItem component={RouterLink} to="/reg" onClick={handleCloseMenu}>
+          <MenuItem
+            component={RouterLink}
+            to="/regist"
+            onClick={handleCloseMenu}
+            sx={{
+              color: "black",
+              "&:hover": {
+                background: "#bdc3c7",
+              },
+            }}
+          >
             Registrar
           </MenuItem>
-          <MenuItem component={RouterLink} to="/faq" onClick={handleCloseMenu}>
+          <MenuItem
+            component={RouterLink}
+            to="/faq"
+            onClick={handleCloseMenu}
+            sx={{
+              color: "black",
+              "&:hover": {
+                background: "#bdc3c7",
+              },
+            }}
+          >
             FAQ
           </MenuItem>
         </Menu>

@@ -34,7 +34,6 @@ import { AuthProvider } from "./context/AuthContext";
 import Catalog from "./pages/Catalog";
 import About from "./pages/About";
 import HowItWorks from "./pages/HowItWorks";
-import Testimonials from "./pages/Testimonials";
 import Cart from "./pages/Cart";
 import FAQ from "./pages/FAQ";
 import ProtectedLayout from "./components/ProtectedLayout";
@@ -58,7 +57,7 @@ function App() {
             <Route path="/catalogo" element={<Catalog />} />
             <Route path="/about" element={<About />} />
             <Route path="/como-funciona" element={<HowItWorks />} />
-            <Route path="/reg" element={<TShirtForm />} />
+            <Route path="/regist" element={<TShirtForm />} />
             <Route path="/car/*" element={<Cart />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/account/*" element={<PerfilPage />} />
