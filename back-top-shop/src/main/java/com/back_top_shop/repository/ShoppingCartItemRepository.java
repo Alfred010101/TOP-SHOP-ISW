@@ -14,6 +14,8 @@ import com.back_top_shop.model.ShoppingCartItem;
 import jakarta.transaction.Transactional;
 
 public interface ShoppingCartItemRepository extends JpaRepository<ShoppingCartItem, Integer> {
+    List<ShoppingCartItem> findByFkCart(Integer fkCart);
+
     Optional<ShoppingCartItem> findByFkCartAndFkTshirt(Integer fkCart, Integer fkTshirt);
 
     @Query(value = """

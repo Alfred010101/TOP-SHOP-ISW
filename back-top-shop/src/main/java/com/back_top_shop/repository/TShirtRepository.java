@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TShirtRepository extends JpaRepository<TShirt, Long> {
+public interface TShirtRepository extends JpaRepository<TShirt, Integer> {
 
     @Query(value = "SELECT * FROM tshirts ORDER BY id DESC LIMIT 6", 
         nativeQuery = true)

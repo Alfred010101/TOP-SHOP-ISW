@@ -57,34 +57,34 @@ const ShoppingCart: React.FC = () => {
     closeConfirmDialog();
   };
 
+  const fetchCart = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Usuario no autenticado");
+      return;
+    }
+
+    const email = getUserEmailFromToken(token);
+    if (!email) {
+      alert("Token inválido");
+      return;
+    }
+    const response = await fetch(
+      `http://localhost:8080/api/v1/user/shoppingCart/items?email=${email}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      setCartItems(data);
+    }
+  };
+
   useEffect(() => {
-    const fetchCart = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Usuario no autenticado");
-        return;
-      }
-
-      const email = getUserEmailFromToken(token);
-      if (!email) {
-        alert("Token inválido");
-        return;
-      }
-      const response = await fetch(
-        `http://localhost:8080/api/v1/user/shoppingCart/items?email=${email}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setCartItems(data);
-      }
-    };
-
     fetchCart();
   }, []);
 
@@ -193,6 +193,7 @@ const ShoppingCart: React.FC = () => {
       alert("Compra éxitosa.");
 
       setOpenModalPay(false);
+      fetchCart();
     } catch (error) {
       alert("Error al realizar pago.");
     }
