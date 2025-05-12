@@ -15,8 +15,17 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  List,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  ListItemText,
 } from "@mui/material";
 import { getUserEmailFromToken } from "../context/AuthContext";
+import { ExpandMore } from "@mui/icons-material";
 
 interface Ticket {
   id: number;
@@ -27,7 +36,6 @@ interface Ticket {
 }
 
 interface TicketItem {
-  tshirtId: number;
   title: string;
   amount: number;
   price: number;
@@ -74,7 +82,6 @@ const History = () => {
     page: 0,
     pageSize: 5,
   });
-  const [tshirtImages, setTshirtImages] = useState<Record<number, string>>({});
 
   const token = localStorage.getItem("token");
 
@@ -93,18 +100,6 @@ const History = () => {
     setTickets(data);
   };
 
-  const fetchTshirtImage = async (tshirtId: number) => {
-    try {
-      const res = await fetch(`http://localhost:8080/api/tshirts/${tshirtId}`);
-      if (!res.ok) throw new Error("Not found");
-      const data = await res.json();
-      setTshirtImages((prev) => ({ ...prev, [tshirtId]: data.imageUrl }));
-    } catch (error) {
-      // No existe la camiseta, poner imagen por defecto
-      setTshirtImages((prev) => ({ ...prev, [tshirtId]: "" }));
-    }
-  };
-
   const fetchTicketItems = async (ticketId: number) => {
     const res = await fetch(
       `http://localhost:8080/api/v1/user/tickets/full/${ticketId}`,
@@ -118,10 +113,6 @@ const History = () => {
     setTicketDetails(data);
     setSelectedTicketId(ticketId);
     setOpenDetails(true);
-
-    data.items.forEach((item) => {
-      fetchTshirtImage(item.tshirtId);
-    });
   };
 
   useEffect(() => {
@@ -178,30 +169,46 @@ const History = () => {
 
       <Modal open={openDetails} onClose={() => setOpenDetails(false)}>
         <Box sx={modalStyle}>
-          <Typography variant="h6" gutterBottom>
-            Detalles del Ticket #{selectedTicketId}
+          <Typography variant="h6" gutterBottom textAlign={"center"}>
+            Ticket : Folio #{selectedTicketId}
           </Typography>
 
           {ticketDetails && (
             <>
-              <Typography variant="subtitle1" gutterBottom>
-                Dirección de Envío:
+              <Typography
+                sx={{
+                  border: "1px solid rgb(155, 89, 182)",
+                  padding: 1,
+                  borderRadius: 1,
+                }}
+                variant="subtitle1"
+                gutterBottom
+              >
+                Dirección de Envío
               </Typography>
               <Typography>
-                {ticketDetails.address.streetName} #
+                Calle : {ticketDetails.address.streetName} #
                 {ticketDetails.address.exteriorNumber}
                 {ticketDetails.address.interiorNumber &&
                   ` Int. ${ticketDetails.address.interiorNumber}`}
                 <br />
                 CP: {ticketDetails.address.postalCode}
                 <br />
-                {ticketDetails.address.references}
+                Referencias: {ticketDetails.address.references}
               </Typography>
 
               <Divider sx={{ my: 2 }} />
 
-              <Typography variant="subtitle1" gutterBottom>
-                Datos de Pago:
+              <Typography
+                sx={{
+                  border: "1px solid rgb(155, 89, 182)",
+                  padding: 1,
+                  borderRadius: 1,
+                }}
+                variant="subtitle1"
+                gutterBottom
+              >
+                Datos de Pago
               </Typography>
               <Typography>
                 Nombre en la tarjeta: {ticketDetails.cart_name}
@@ -212,42 +219,54 @@ const History = () => {
 
               <Divider sx={{ my: 2 }} />
 
-              <Typography variant="subtitle1" gutterBottom>
-                Productos:
-              </Typography>
-
-              <Grid container spacing={2}>
-                {ticketDetails.items.map((item, index) => (
-                  <Grid item xs={12} sm={6} key={index}>
-                    <Card>
-                      <CardMedia
-                        component="img"
-                        height="140"
-                        image={
-                          `http://localhost:8080/imgs/${item.resource}` ||
-                          "/placeholder.png"
-                        }
-                        alt={item.title}
-                      />
-                      <CardContent>
-                        <Typography variant="h6">{item.title}</Typography>
-                        <Typography>
-                          {item.amount} x ${item.price.toFixed(2)} = $
-                          {(item.amount * item.price).toFixed(2)}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
+              <Accordion defaultExpanded>
+                <AccordionSummary
+                  sx={{
+                    border: "1px solid rgb(155, 89, 182)",
+                    padding: 1,
+                    borderRadius: 1,
+                  }}
+                  expandIcon={<ExpandMore />}
+                >
+                  <Typography variant="subtitle1">Productos</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <List>
+                    {ticketDetails.items.map((item, index) => (
+                      <ListItem key={index} alignItems="flex-start">
+                        <ListItemAvatar>
+                          <Avatar
+                            variant="rounded"
+                            src={`http://localhost:8080/imgs/${item.resource}`}
+                            alt={item.title}
+                            sx={{ width: 60, height: 60, mr: 2 }}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={item.title}
+                          secondary={`${item.amount} x $${item.price.toFixed(
+                            2
+                          )} = $${(item.amount * item.price).toFixed(2)}`}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </AccordionDetails>
+              </Accordion>
 
               <Divider sx={{ my: 2 }} />
-              <Typography variant="h6">
+              <Typography variant="h6" textAlign={"right"}>
                 Total: ${calculateTotal().toFixed(2)}
               </Typography>
 
               <Box mt={2} textAlign="right">
-                <Button onClick={() => setOpenDetails(false)}>Cerrar</Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => setOpenDetails(false)}
+                >
+                  Cerrar
+                </Button>
               </Box>
             </>
           )}
