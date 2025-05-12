@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.back_top_shop.dto.PaymentRequestDTO;
+import com.back_top_shop.dto.TicketDTO;
 import com.back_top_shop.model.ShoppingCart;
 import com.back_top_shop.model.ShoppingCartItem;
 import com.back_top_shop.model.TShirt;
@@ -25,7 +26,6 @@ public class TicketService
 {
     private final TicketRepository ticketRepository;
     private final UserService userService;
-    private final TicketItemService ticketItemService;
     private final ShoppingCartRepository shoppingCartRepository;    
     private final ShoppingCartItemRepository shoppingCartItemRepository;
     private final TShirtRepository tshirtRepository;
@@ -65,5 +65,11 @@ public class TicketService
             tshirtRepository.save(tshirt);
         }
         shoppingCartItemRepository.deleteAll(cartItems);
+    }
+
+    public List<TicketDTO> findAllByUsername(String username) 
+    {
+        System.out.println(username);
+        return ticketRepository.findAllByUsername(username);
     }
 }
