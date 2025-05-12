@@ -5,9 +5,18 @@ import {
   GridColDef,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { Typography, Button, Modal, Box, Divider } from "@mui/material";
+import {
+  Typography,
+  Button,
+  Modal,
+  Box,
+  Divider,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+} from "@mui/material";
 import { getUserEmailFromToken } from "../context/AuthContext";
-import { Details } from "@mui/icons-material";
 
 interface Ticket {
   id: number;
@@ -22,6 +31,7 @@ interface TicketItem {
   title: string;
   amount: number;
   price: number;
+  resource: string;
 }
 
 interface Address {
@@ -39,17 +49,12 @@ interface TicketDetails {
   items: TicketItem[];
 }
 
-interface Tshirt {
-  id: number;
-  imageUrl: string;
-}
-
 const modalStyle = {
   position: "absolute" as const,
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 500,
+  width: 600,
   bgcolor: "background.paper",
   borderRadius: 2,
   boxShadow: 24,
@@ -69,6 +74,8 @@ const History = () => {
     page: 0,
     pageSize: 5,
   });
+  const [tshirtImages, setTshirtImages] = useState<Record<number, string>>({});
+
   const token = localStorage.getItem("token");
 
   const fetchTickets = async () => {
@@ -86,6 +93,18 @@ const History = () => {
     setTickets(data);
   };
 
+  const fetchTshirtImage = async (tshirtId: number) => {
+    try {
+      const res = await fetch(`http://localhost:8080/api/tshirts/${tshirtId}`);
+      if (!res.ok) throw new Error("Not found");
+      const data = await res.json();
+      setTshirtImages((prev) => ({ ...prev, [tshirtId]: data.imageUrl }));
+    } catch (error) {
+      // No existe la camiseta, poner imagen por defecto
+      setTshirtImages((prev) => ({ ...prev, [tshirtId]: "" }));
+    }
+  };
+
   const fetchTicketItems = async (ticketId: number) => {
     const res = await fetch(
       `http://localhost:8080/api/v1/user/tickets/full/${ticketId}`,
@@ -99,11 +118,23 @@ const History = () => {
     setTicketDetails(data);
     setSelectedTicketId(ticketId);
     setOpenDetails(true);
+
+    data.items.forEach((item) => {
+      fetchTshirtImage(item.tshirtId);
+    });
   };
 
   useEffect(() => {
     fetchTickets();
   }, []);
+
+  const calculateTotal = () => {
+    if (!ticketDetails) return 0;
+    return ticketDetails.items.reduce(
+      (sum, item) => sum + item.price * item.amount,
+      0
+    );
+  };
 
   const columns: GridColDef[] = [
     { field: "date", headerName: "Fecha", width: 280 },
@@ -127,14 +158,6 @@ const History = () => {
       ),
     },
   ];
-
-  const calculateTotal = () => {
-    if (!ticketDetails) return 0;
-    return ticketDetails.items.reduce(
-      (sum, item) => sum + item.price * item.amount,
-      0
-    );
-  };
 
   return (
     <>
@@ -192,19 +215,37 @@ const History = () => {
               <Typography variant="subtitle1" gutterBottom>
                 Productos:
               </Typography>
-              <details>
-                {ticketDetails.items.map((item, index) => (
-                  <Typography key={index}>
-                    {item.title} — {item.amount} x ${item.price.toFixed(2)} = $
-                    {(item.amount * item.price).toFixed(2)}
-                  </Typography>
-                ))}
 
-                <Divider sx={{ my: 2 }} />
-                <Typography variant="h6">
-                  Total: ${calculateTotal().toFixed(2)}
-                </Typography>
-              </details>
+              <Grid container spacing={2}>
+                {ticketDetails.items.map((item, index) => (
+                  <Grid item xs={12} sm={6} key={index}>
+                    <Card>
+                      <CardMedia
+                        component="img"
+                        height="140"
+                        image={
+                          `http://localhost:8080/imgs/${item.resource}` ||
+                          "/placeholder.png"
+                        }
+                        alt={item.title}
+                      />
+                      <CardContent>
+                        <Typography variant="h6">{item.title}</Typography>
+                        <Typography>
+                          {item.amount} x ${item.price.toFixed(2)} = $
+                          {(item.amount * item.price).toFixed(2)}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="h6">
+                Total: ${calculateTotal().toFixed(2)}
+              </Typography>
+
               <Box mt={2} textAlign="right">
                 <Button onClick={() => setOpenDetails(false)}>Cerrar</Button>
               </Box>

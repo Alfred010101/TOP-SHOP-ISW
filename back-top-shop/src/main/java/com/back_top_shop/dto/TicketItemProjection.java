@@ -4,4 +4,5 @@ public interface TicketItemProjection {
     String getTitle();
     Integer getAmount();
     Double getPrice();
+    String getResource();
 }

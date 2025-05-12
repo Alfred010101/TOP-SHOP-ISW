@@ -85,11 +85,11 @@ public class TicketService
         if (info == null) {
             throw new EntityNotFoundException("Ticket no encontrado");
         }
-        System.out.println(info.getUserId());
+        
         AddressProjection address = addressRepository.findByUserId(info.getUserId());
-        System.out.println(address);
+
         List<TicketItemDTO> items = ticketItemRepository.findByTicketId(ticketId).stream()
-            .map(p -> new TicketItemDTO(p.getTitle(), p.getAmount(), p.getPrice()))
+            .map(p -> new TicketItemDTO(p.getTitle(), p.getAmount(), p.getPrice(), p.getResource()))
             .toList();
 
         AddressDTO addressDTO = new AddressDTO(

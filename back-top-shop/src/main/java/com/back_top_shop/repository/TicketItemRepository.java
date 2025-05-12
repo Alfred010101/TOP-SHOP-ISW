@@ -14,9 +14,10 @@ import com.back_top_shop.model.TicketItem;
 public interface TicketItemRepository extends JpaRepository<TicketItem, Long>  
 {
     @Query(value = """
-        SELECT title, amount, price
-        FROM ticket_items
-        WHERE fk_ticket = :ticketId
+        SELECT ti.title, ti.amount, ti.price, t.resource
+        FROM ticket_items ti
+        JOIN tshirts t ON t.id = ti.fk_tshirt
+        WHERE ti.fk_ticket = :ticketId
     """, nativeQuery = true)
     List<TicketItemProjection> findByTicketId(@Param("ticketId") Integer ticketId);
 }
