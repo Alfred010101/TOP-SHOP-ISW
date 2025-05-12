@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.back_top_shop.dto.TicketBasicInfo;
 import com.back_top_shop.dto.TicketDTO;
 import com.back_top_shop.model.Ticket;
 
@@ -30,5 +31,14 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer>
         ORDER BY t.date DESC
     """, nativeQuery = true)
     List<TicketDTO> findAllByUsername(@Param("username") String username);
+
+    @Query(value = """
+        SELECT t.cart_name, t.cart_number, t.fk_user AS userId
+        FROM tickets t
+        WHERE t.id = :ticketId
+        LIMIT 1
+    """, nativeQuery = true)
+    TicketBasicInfo findTicketBasicInfo(@Param("ticketId") Integer ticketId);
+
 
 }

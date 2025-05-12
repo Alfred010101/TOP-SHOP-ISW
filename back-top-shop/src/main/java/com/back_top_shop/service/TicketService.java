@@ -4,20 +4,27 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.back_top_shop.dto.AddressDTO;
+import com.back_top_shop.dto.AddressProjection;
 import com.back_top_shop.dto.PaymentRequestDTO;
+import com.back_top_shop.dto.TicketBasicInfo;
 import com.back_top_shop.dto.TicketDTO;
+import com.back_top_shop.dto.TicketDetailsDTO;
+import com.back_top_shop.dto.TicketItemDTO;
 import com.back_top_shop.model.ShoppingCart;
 import com.back_top_shop.model.ShoppingCartItem;
 import com.back_top_shop.model.TShirt;
 import com.back_top_shop.model.Ticket;
 import com.back_top_shop.model.TicketItem;
 import com.back_top_shop.model.User;
+import com.back_top_shop.repository.AddressRepository;
 import com.back_top_shop.repository.ShoppingCartItemRepository;
 import com.back_top_shop.repository.ShoppingCartRepository;
 import com.back_top_shop.repository.TShirtRepository;
 import com.back_top_shop.repository.TicketItemRepository;
 import com.back_top_shop.repository.TicketRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -30,6 +37,7 @@ public class TicketService
     private final ShoppingCartItemRepository shoppingCartItemRepository;
     private final TShirtRepository tshirtRepository;
     private final TicketItemRepository ticketItemRepository;
+    private final AddressRepository addressRepository;
 
     public void createTicket(PaymentRequestDTO request)
     {
@@ -69,7 +77,29 @@ public class TicketService
 
     public List<TicketDTO> findAllByUsername(String username) 
     {
-        System.out.println(username);
         return ticketRepository.findAllByUsername(username);
+    }
+
+    public TicketDetailsDTO getTicketDetails(Integer ticketId) {
+        TicketBasicInfo info = ticketRepository.findTicketBasicInfo(ticketId);
+        if (info == null) {
+            throw new EntityNotFoundException("Ticket no encontrado");
+        }
+        System.out.println(info.getUserId());
+        AddressProjection address = addressRepository.findByUserId(info.getUserId());
+        System.out.println(address);
+        List<TicketItemDTO> items = ticketItemRepository.findByTicketId(ticketId).stream()
+            .map(p -> new TicketItemDTO(p.getTitle(), p.getAmount(), p.getPrice()))
+            .toList();
+
+        AddressDTO addressDTO = new AddressDTO(
+            address.getStreetName(),
+            address.getExteriorNumber(),
+            address.getInteriorNumber(),
+            address.getPostalCode(),
+            address.getReferences()
+        );
+
+        return new TicketDetailsDTO(info.getCart_name(), info.getCart_number(), addressDTO, items);
     }
 }

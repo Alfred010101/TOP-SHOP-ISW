@@ -2,6 +2,8 @@ SELECT * FROM top_shop.users;
 SELECT * FROM top_shop.address;
 SELECT * FROM top_shop.tshirts;
 SELECT * FROM top_shop.shopping_cart_items;
+SELECT * FROM top_shop.tickets;
+SELECT * FROM top_shop.ticket_items;
 
 delete from top_shop.address where id = 18;
 delete from top_shop.users where id = 18;
