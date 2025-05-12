@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.back_top_shop.dto.AddToCartRequestDTO;
 import com.back_top_shop.dto.DeleteItemRequestDTO;
+import com.back_top_shop.dto.PaymentRequestDTO;
 import com.back_top_shop.dto.ShoppingCartItemDTO;
 import com.back_top_shop.model.ShoppingCart;
 import com.back_top_shop.model.ShoppingCartItem;
@@ -25,6 +27,7 @@ import com.back_top_shop.repository.ShoppingCartItemRepository;
 import com.back_top_shop.repository.ShoppingCartRepository;
 import com.back_top_shop.repository.UserRepository;
 import com.back_top_shop.service.ShoppingCartService;
+import com.back_top_shop.service.TicketService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,7 +40,8 @@ public class ShoppingCartController
     private final ShoppingCartRepository cartRepository;
     private final ShoppingCartItemRepository itemRepository;
     private final ShoppingCartService shoppingCartService;
-
+    private final TicketService ticketService;
+    
     @PostMapping("/add")
     public ResponseEntity<String> addToCart(@RequestBody AddToCartRequestDTO request) {
     Integer productId = request.getProductId();
@@ -102,6 +106,18 @@ public class ShoppingCartController
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item no encontrado");
+        }
+    }
+
+    @PostMapping("/pay")
+    public ResponseEntity<?> processPayment(@RequestBody PaymentRequestDTO request)
+    {
+        System.out.println(request);
+        try {
+            ticketService.createTicket(request);
+            return ResponseEntity.ok("Pago procesado exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el pago");
         }
     }
 }

@@ -64,9 +64,10 @@ CREATE TABLE IF NOT EXISTS top_shop.shopping_cart_items(
 CREATE TABLE IF NOT EXISTS top_shop.tickets(
 	id INT AUTO_INCREMENT NOT NULL,
     fk_user INT NOT NULL,
+    cart_name VARCHAR(127) NOT NULL,
+    cart_number VARCHAR(16) NOT NULL,
     `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    total DECIMAL(10, 2) NOT NULL,
-    `status` ENUM('nuevo', 'pagado', 'enviado', 'completado', 'cancelado') DEFAULT 'nuevo',
+    `status` ENUM('PENDIENTE', 'ENVIADO', 'ENTREGADO') NOT NULL DEFAULT 'PENDIENTE',
     PRIMARY KEY (id)
 );
 
@@ -74,31 +75,9 @@ CREATE TABLE IF NOT EXISTS top_shop.ticket_items(
 	id INT AUTO_INCREMENT NOT NULL,
 	fk_ticket INT NOT NULL,
     fk_tshirt INT,
-    `name` VARCHAR(31) NOT NULL,
+    title VARCHAR(31) NOT NULL,
     amount INT NOT NULL CHECK (amount > 0),
     price DECIMAL(6, 2) NOT NULL,
-    subtotal DECIMAL(10,2) GENERATED ALWAYS AS (amount * price) STORED,
-    PRIMARY KEY(id),
-    FOREIGN KEY(fk_ticket) REFERENCES top_shop.tickets(id)
-);
-
-CREATE TABLE IF NOT EXISTS top_shop.payments(
-    id INT AUTO_INCREMENT NOT NULL,
-    fk_ticket INT NOT NULL,
-    payment_method ENUM('tarjeta', 'paypal', 'oxxo', 'transferencia') NOT NULL,
-    payment_status ENUM('pendiente', 'pagado', 'fallido') NOT NULL DEFAULT 'pendiente',
-    paid_at DATETIME,
-    PRIMARY KEY(id),
-    FOREIGN KEY(fk_ticket) REFERENCES top_shop.tickets(id)
-);
-
-CREATE TABLE IF NOT EXISTS top_shop.shipments (
-    id INT AUTO_INCREMENT NOT NULL,
-    fk_ticket INT NOT NULL,
-    shipment_status ENUM('pendiente', 'enviado', 'entregado', 'cancelado') NOT NULL DEFAULT 'pendiente',
-    tracking_number VARCHAR(64),
-    shipped_at DATETIME,
-    delivered_at DATETIME,
     PRIMARY KEY(id),
     FOREIGN KEY(fk_ticket) REFERENCES top_shop.tickets(id)
 );
